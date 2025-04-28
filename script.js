@@ -17,23 +17,30 @@ async function fetchPopularMovies() {
 }
 
 function renderMovies(movies) {
-  movieList.innerHTML = ''; 
-
-  movies.forEach(movie => {
-    const movieCard = document.createElement('div');
-    movieCard.classList.add('movie-card');
-
-    movieCard.innerHTML = `
-      <img src="${IMAGE_BASE_URL}${movie.poster_path}" alt="${movie.title}">
-      <div class="card-content">
-        <div class="title">${movie.title}</div>
-        <div class="rating">⭐ ${movie.vote_average}</div>
-      </div>
-    `;
-
-    movieList.appendChild(movieCard);
-  });
-}
+    movieList.innerHTML = '';
+  
+    if (movies.length === 0) {
+      movieList.innerHTML = `<p style="grid-column: 1 / -1; text-align: center;">검색 결과가 없습니다.</p>`;
+      return;
+    }
+  
+    movies.forEach(movie => {
+      const movieCard = document.createElement('div');
+      movieCard.classList.add('movie-card');
+      movieCard.dataset.movieId = movie.id;
+  
+      movieCard.innerHTML = `
+        <img src="${IMAGE_BASE_URL}${movie.poster_path}" alt="${movie.title}">
+        <div class="card-content">
+          <div class="title">${movie.title}</div>
+          <div class="rating">⭐ ${movie.vote_average}</div>
+        </div>
+      `;
+  
+      movieList.appendChild(movieCard);
+    });
+  }
+  
 
 fetchPopularMovies();
 

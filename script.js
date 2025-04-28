@@ -18,7 +18,7 @@ async function fetchPopularMovies() {
 
 function renderMovies(movies) {
     movieList.innerHTML = '';
-  
+
     if (movies.length === 0) {
       movieList.innerHTML = `<p style="grid-column: 1 / -1; text-align: center;">검색 결과가 없습니다.</p>`;
       return;
@@ -39,7 +39,7 @@ function renderMovies(movies) {
   
       movieList.appendChild(movieCard);
     });
-  }
+}
   
 
 fetchPopularMovies();
@@ -52,7 +52,7 @@ async function searchMovies(query) {
   try {
     const response = await fetch(`${BASE_URL}/search/movie?api_key=${API_KEY}&language=ko-KR&query=${encodeURIComponent(query)}&page=1`);
     const data = await response.json();
-    console.log('검색 결과:', data.results);
+    console.log('검색 결과', data.results);
 
     renderMovies(data.results);
   } catch (error) {
@@ -101,26 +101,6 @@ function showMovieDetail(movie) {
     <p><strong>줄거리:</strong> ${movie.overview || '줄거리 정보가 없습니다.'}</p>
   `;
   modal.classList.remove('hidden');
-}
-
-function renderMovies(movies) {
-  movieList.innerHTML = '';
-
-  movies.forEach(movie => {
-    const movieCard = document.createElement('div');
-    movieCard.classList.add('movie-card');
-    movieCard.dataset.movieId = movie.id;
-
-    movieCard.innerHTML = `
-      <img src="${IMAGE_BASE_URL}${movie.poster_path}" alt="${movie.title}">
-      <div class="card-content">
-        <div class="title">${movie.title}</div>
-        <div class="rating">⭐ ${movie.vote_average}</div>
-      </div>
-    `;
-
-    movieList.appendChild(movieCard);
-  });
 }
 
 searchInput.addEventListener('keydown', (event) => {

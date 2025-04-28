@@ -115,3 +115,13 @@ function renderMovies(movies) {
     movieList.appendChild(movieCard);
   });
 }
+
+searchInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      const query = searchInput.value.trim();
+      if (query !== '') {
+        searchMovies(query);
+      }
+    }
+  });
+  

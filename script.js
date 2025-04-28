@@ -36,3 +36,26 @@ function renderMovies(movies) {
 }
 
 fetchPopularMovies();
+
+
+const searchInput = document.getElementById('search-input');
+const searchButton = document.getElementById('search-button');
+
+async function searchMovies(query) {
+  try {
+    const response = await fetch(`${BASE_URL}/search/movie?api_key=${API_KEY}&language=ko-KR&query=${encodeURIComponent(query)}&page=1`);
+    const data = await response.json();
+    console.log('검색 결과:', data.results);
+
+    renderMovies(data.results);
+  } catch (error) {
+    console.error('영화 검색 중 오류 발생:', error);
+  }
+}
+
+searchButton.addEventListener('click', () => {
+  const query = searchInput.value.trim();
+  if (query !== '') {
+    searchMovies(query);
+  }
+});

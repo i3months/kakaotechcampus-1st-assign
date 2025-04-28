@@ -9,6 +9,16 @@ const bookmarkButton = document.getElementById("bookmark-button");
 const modalClose = document.getElementById("modal-close");
 const modal = document.getElementById("modal");
 
+function debounce(func, delay) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+}
+
 async function loadPopular() {
   const movies = await fetchPopularMovies();
   renderMovies(movies);
@@ -59,11 +69,21 @@ movieList.addEventListener("click", async (event) => {
 
 searchButton.addEventListener("click", handleSearch);
 
-searchInput.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    handleSearch();
+const debouncedSearch = debounce(async () => {
+  const query = searchInput.value.trim();
+  if (query !== "") {
+    const movies = await searchMovies(query);
+    renderMovies(movies);
   }
-});
+}, 500);
+
+searchInput.addEventListener("input", debouncedSearch);
+
+// searchInput.addEventListener("keydown", (event) => {
+//   if (event.key === "Enter") {
+//     handleSearch();
+//   }
+// });
 
 bookmarkButton.addEventListener("click", handleBookmarkView);
 

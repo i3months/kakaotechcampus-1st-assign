@@ -78,13 +78,6 @@ const debouncedSearch = debounce(async () => {
 }, 500);
 
 searchInput.addEventListener("input", debouncedSearch);
-
-// searchInput.addEventListener("keydown", (event) => {
-//   if (event.key === "Enter") {
-//     handleSearch();
-//   }
-// });
-
 bookmarkButton.addEventListener("click", handleBookmarkView);
 
 loadPopular();

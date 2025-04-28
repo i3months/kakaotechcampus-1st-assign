@@ -88,7 +88,7 @@ movieList.addEventListener("click", async (event) => {
   const card = event.target.closest(".movie-card");
   if (!card) return;
 
-  const bookmarkButton = event.target.closest('.bookmark-btn');
+  const bookmarkButton = event.target.closest(".bookmark-btn");
   if (bookmarkButton) {
     event.stopPropagation();
     const movieId = parseInt(card.dataset.movieId);
@@ -158,3 +158,28 @@ function toggleBookmark(movieId, button) {
 
   saveBookmarkedMovies(bookmarked);
 }
+
+const bookmarkButton = document.getElementById("bookmark-button");
+
+bookmarkButton.addEventListener("click", async () => {
+  const bookmarked = getBookmarkedMovies();
+
+  if (bookmarked.length === 0) {
+    movieList.innerHTML = `<p style="grid-column: 1 / -1; text-align: center;">북마크한 영화가 없습니다.</p>`;
+    return;
+  }
+
+  // 북마크한 영화 ID 목록을 이용해 영화 상세정보 가져오기
+  try {
+    const movieDetailsPromises = bookmarked.map((id) =>
+      fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}&language=ko-KR`).then(
+        (res) => res.json()
+      )
+    );
+    const movies = await Promise.all(movieDetailsPromises);
+
+    renderMovies(movies);
+  } catch (error) {
+    console.error("북마크 영화 불러오기 실패:", error);
+  }
+});

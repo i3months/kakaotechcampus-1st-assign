@@ -59,3 +59,59 @@ searchButton.addEventListener('click', () => {
     searchMovies(query);
   }
 });
+
+const modal = document.getElementById('modal');
+const modalClose = document.getElementById('modal-close');
+const modalBody = document.getElementById('modal-body');
+
+modalClose.addEventListener('click', () => {
+  modal.classList.add('hidden');
+});
+
+movieList.addEventListener('click', async (event) => {
+  const card = event.target.closest('.movie-card');
+  if (!card) return; 
+
+  const movieId = card.dataset.movieId;
+  if (!movieId) return;
+
+  try {
+    const response = await fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=ko-KR`);
+    const movie = await response.json();
+    console.log('영화 상세정보:', movie);
+
+    showMovieDetail(movie);
+  } catch (error) {
+    console.error('영화 상세 정보 가져오기 실패:', error);
+  }
+});
+
+function showMovieDetail(movie) {
+  modalBody.innerHTML = `
+    <h2>${movie.title}</h2>
+    <p><strong>개봉일:</strong> ${movie.release_date}</p>
+    <p><strong>평점:</strong> ⭐ ${movie.vote_average}</p>
+    <p><strong>줄거리:</strong> ${movie.overview || '줄거리 정보가 없습니다.'}</p>
+  `;
+  modal.classList.remove('hidden');
+}
+
+function renderMovies(movies) {
+  movieList.innerHTML = '';
+
+  movies.forEach(movie => {
+    const movieCard = document.createElement('div');
+    movieCard.classList.add('movie-card');
+    movieCard.dataset.movieId = movie.id;
+
+    movieCard.innerHTML = `
+      <img src="${IMAGE_BASE_URL}${movie.poster_path}" alt="${movie.title}">
+      <div class="card-content">
+        <div class="title">${movie.title}</div>
+        <div class="rating">⭐ ${movie.vote_average}</div>
+      </div>
+    `;
+
+    movieList.appendChild(movieCard);
+  });
+}

@@ -26,16 +26,21 @@ function renderMovies(movies) {
     return;
   }
 
+  const bookmarkedMovies = getBookmarkedMovies();
+
   movies.forEach((movie) => {
     const movieCard = document.createElement("div");
     movieCard.classList.add("movie-card");
     movieCard.dataset.movieId = movie.id;
+
+    const isBookmarked = bookmarkedMovies.includes(movie.id);
 
     movieCard.innerHTML = `
         <img src="${IMAGE_BASE_URL}${movie.poster_path}" alt="${movie.title}">
         <div class="card-content">
           <div class="title">${movie.title}</div>
           <div class="rating">⭐ ${movie.vote_average}</div>
+          <button class="bookmark-btn">${isBookmarked ? "❤️" : "🤍"}</button>
         </div>
       `;
 
@@ -83,6 +88,14 @@ movieList.addEventListener("click", async (event) => {
   const card = event.target.closest(".movie-card");
   if (!card) return;
 
+  const bookmarkButton = event.target.closest('.bookmark-btn');
+  if (bookmarkButton) {
+    event.stopPropagation();
+    const movieId = parseInt(card.dataset.movieId);
+    toggleBookmark(movieId, bookmarkButton);
+    return;
+  }
+
   const movieId = card.dataset.movieId;
   if (!movieId) return;
 
@@ -119,3 +132,29 @@ searchInput.addEventListener("keydown", (event) => {
     }
   }
 });
+
+const BOOKMARK_KEY = "bookmarkedMovies";
+
+function getBookmarkedMovies() {
+  const stored = localStorage.getItem(BOOKMARK_KEY);
+  return stored ? JSON.parse(stored) : [];
+}
+
+function saveBookmarkedMovies(ids) {
+  localStorage.setItem(BOOKMARK_KEY, JSON.stringify(ids));
+}
+
+function toggleBookmark(movieId, button) {
+  const bookmarked = getBookmarkedMovies();
+  const index = bookmarked.indexOf(movieId);
+
+  if (index === -1) {
+    bookmarked.push(movieId);
+    button.textContent = "❤️";
+  } else {
+    bookmarked.splice(index, 1);
+    button.textContent = "🤍";
+  }
+
+  saveBookmarkedMovies(bookmarked);
+}

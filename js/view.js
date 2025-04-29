@@ -1,6 +1,6 @@
 import { getBookmarkedMovies } from "./bookmark.js";
+import { IMAGE_BASE_URL } from "./constants.js";
 
-const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 const movieList = document.getElementById("movie-list");
 const modal = document.getElementById("modal");
 const modalBody = document.getElementById("modal-body");

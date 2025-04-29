@@ -1,4 +1,4 @@
-const BOOKMARK_KEY = "bookmarkedMovies";
+import { BOOKMARK_KEY } from "./constants.js";
 
 export function getBookmarkedMovies() {
   const stored = localStorage.getItem(BOOKMARK_KEY);

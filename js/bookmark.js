@@ -13,7 +13,7 @@ export function toggleBookmark(movieId, button) {
   const bookmarked = getBookmarkedMovies();
   const index = bookmarked.indexOf(movieId);
 
-  if (index === -1) {
+  if (index == -1) {
     bookmarked.push(movieId);
     button.textContent = "❤️";
   } else {
